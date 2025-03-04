@@ -105,7 +105,7 @@
 		class="w-full text-3xl text-gray-800 dark:text-gray-100 font-medium text-center flex items-center gap-4 font-primary"
 	>
 		<div class="w-full flex flex-col justify-center items-center">
-			<div class="flex flex-row justify-center gap-3 @sm:gap-3.5 w-fit px-5">
+			<div class="flex flex-row justify-center gap-3 @sm:gap-3.5 w-fit px-5" style="margin-bottom:50px;">
 				<div class="flex shrink-0 justify-center">
 					<div class="flex -space-x-4 mb-0.5" in:fade={{ duration: 100 }}>
 						{#each models as model, modelIdx}
@@ -126,7 +126,7 @@
 											($i18n.language === 'dg-DG'
 												? `/doge.png`
 												: `${WEBUI_BASE_URL}/static/favicon.png`)}
-										class=" size-9 @sm:size-10 rounded-full border-[1px] border-gray-200 dark:border-none"
+										class=" size-16 @sm:size-16 rounded-full border-[1px] border-gray-200 dark:border-none"
 										alt="logo"
 										draggable="false"
 									/>
@@ -136,12 +136,20 @@
 					</div>
 				</div>
 
-				<div class=" text-3xl @sm:text-4xl line-clamp-1" in:fade={{ duration: 100 }}>
-					{#if models[selectedModelIdx]?.name}
-						{models[selectedModelIdx]?.name}
-					{:else}
-						{$i18n.t('Hello, {{name}}', { name: $user.name })}
-					{/if}
+				<div class=" text-3xl @sm:text-4xl line-clamp-2" in:fade={{ duration: 100 }}>
+					<!-- todo -->
+					 <p>
+						<span>嗨，我是DeepSeek</span><br>
+						<span style="font-size:14px;color:#9b9b9b;">我可以帮你搜索、答疑、写作，请把你的任务交给我吧～</span>
+						
+
+						<!-- {#if models[selectedModelIdx]?.name}
+							嗨，我是{models[selectedModelIdx]?.name}
+						{:else}
+							{$i18n.t('Hello, {{name}}', { name: $user.name })}
+						{/if} -->
+					</p>
+					<!-- todo -->
 				</div>
 			</div>
 

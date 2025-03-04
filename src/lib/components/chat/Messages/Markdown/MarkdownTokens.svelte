@@ -169,7 +169,7 @@
 			</div>
 		</div>
 	{:else if token.type === 'blockquote'}
-		<blockquote dir="auto">
+		<blockquote dir="auto" style="color: #888;">
 			<svelte:self id={`${id}-${tokenIdx}`} tokens={token.tokens} {onTaskClick} {onSourceClick} />
 		</blockquote>
 	{:else if token.type === 'list'}
@@ -245,7 +245,7 @@
 			className="w-full space-y-1"
 			dir="auto"
 		>
-			<div class=" mb-1.5" slot="content">
+			<div class=" mb-1.5" slot="content" style="background:#f9f9f9; border-radius: 10px; margin-top:10px; margin-bottom:10px; padding:10px 20px;">
 				<svelte:self
 					id={`${id}-${tokenIdx}-d`}
 					tokens={marked.lexer(token.text)}
