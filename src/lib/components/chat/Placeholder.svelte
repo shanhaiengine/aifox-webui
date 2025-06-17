@@ -107,7 +107,10 @@
 		class="w-full text-3xl text-gray-800 dark:text-gray-100 text-center flex items-center gap-4 font-primary"
 	>
 		<div class="w-full flex flex-col justify-center items-center">
-			<div class="flex flex-row justify-center gap-3 @sm:gap-3.5 w-fit px-5 max-w-xl">
+			<div
+				class="flex flex-row justify-center gap-3 @sm:gap-3.5 w-fit px-5 max-w-xl"
+				style="margin-bottom:50px;"
+			>
 				<div class="flex shrink-0 justify-center">
 					<div class="flex -space-x-4 mb-0.5" in:fade={{ duration: 100 }}>
 						{#each models as model, modelIdx}
@@ -128,7 +131,7 @@
 											($i18n.language === 'dg-DG'
 												? `/doge.png`
 												: `${WEBUI_BASE_URL}/static/favicon.png`)}
-										class=" size-9 @sm:size-10 rounded-full border-[1px] border-gray-100 dark:border-none"
+										class=" size-16 @sm:size-16 rounded-full border-[1px] border-gray-200 dark:border-none"
 										alt="logo"
 										draggable="false"
 									/>
@@ -148,12 +151,24 @@
 							placement="top"
 							className=" flex items-center "
 						>
-							<span class="line-clamp-1">
+							<!-- <span class="line-clamp-1">
 								{models[selectedModelIdx]?.name}
-							</span>
+							</span> -->
+							<p>
+								<span>嗨，我是{models[selectedModelIdx]?.name}</span><br />
+								<span style="font-size:14px;color:#9b9b9b;"
+									>我可以帮你搜索、答疑、写作，请把你的任务交给我吧～</span
+								>
+							</p>
 						</Tooltip>
 					{:else}
-						{$i18n.t('Hello, {{name}}', { name: $user?.name })}
+						<!-- {$i18n.t('Hello, {{name}}', { name: $user?.name })} -->
+						<p>
+							<span>嗨，我是{models[selectedModelIdx]?.name}</span><br />
+							<span style="font-size:14px;color:#9b9b9b;"
+								>我可以帮你搜索、答疑、写作，请把你的任务交给我吧～</span
+							>
+						</p>
 					{/if}
 				</div>
 			</div>

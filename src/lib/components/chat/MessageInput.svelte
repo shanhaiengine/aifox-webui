@@ -53,6 +53,7 @@
 	import GlobeAlt from '../icons/GlobeAlt.svelte';
 	import Photo from '../icons/Photo.svelte';
 	import Wrench from '../icons/Wrench.svelte';
+	import DeepThinkingIcon from '../icons/DeepThinkingIcon.svelte';
 	import CommandLine from '../icons/CommandLine.svelte';
 	import Sparkles from '../icons/Sparkles.svelte';
 
@@ -88,6 +89,7 @@
 	export let imageGenerationEnabled = false;
 	export let webSearchEnabled = false;
 	export let codeInterpreterEnabled = false;
+	export let deepThinkingEnabled = true;
 
 	$: onChange({
 		prompt,
@@ -104,7 +106,8 @@
 		selectedFilterIds,
 		imageGenerationEnabled,
 		webSearchEnabled,
-		codeInterpreterEnabled
+		codeInterpreterEnabled,
+		deepThinkingEnabled
 	});
 
 	let showTools = false;
@@ -535,37 +538,146 @@
 				</div>
 
 				<div class="w-full relative">
-					{#if atSelectedModel !== undefined}
+					{#if atSelectedModel !== undefined || selectedToolIds.length > 0 || webSearchEnabled || ($settings?.webSearch ?? false) === 'always' || imageGenerationEnabled || codeInterpreterEnabled || deepThinkingEnabled}
 						<div
 							class="px-3 pb-0.5 pt-1.5 text-left w-full flex flex-col absolute bottom-0 left-0 right-0 bg-linear-to-t from-white dark:from-gray-900 z-10"
 						>
-							<div class="flex items-center justify-between w-full">
-								<div class="pl-[1px] flex items-center gap-2 text-sm dark:text-gray-500">
-									<img
-										crossorigin="anonymous"
-										alt="model profile"
-										class="size-3.5 max-w-[28px] object-cover rounded-full"
-										src={$models.find((model) => model.id === atSelectedModel.id)?.info?.meta
-											?.profile_image_url ??
-											($i18n.language === 'dg-DG'
-												? `/doge.png`
-												: `${WEBUI_BASE_URL}/static/favicon.png`)}
-									/>
-									<div class="translate-y-[0.5px]">
-										Talking to <span class=" font-medium">{atSelectedModel.name}</span>
+							{#if selectedToolIds.length > 0}
+								<div class="flex items-center justify-between w-full">
+									<div class="flex items-center gap-2.5 text-sm dark:text-gray-500">
+										<div class="pl-1">
+											<span class="relative flex size-2">
+												<span
+													class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"
+												/>
+												<span class="relative inline-flex rounded-full size-2 bg-yellow-500" />
+											</span>
+										</div>
+										<div class="  text-ellipsis line-clamp-1 flex">
+											{#each selectedToolIds.map((id) => {
+												return $tools ? $tools.find((t) => t.id === id) : { id: id, name: id };
+											}) as tool, toolIdx (toolIdx)}
+												<Tooltip
+													content={tool?.meta?.description ?? ''}
+													className=" {toolIdx !== 0 ? 'pl-0.5' : ''} shrink-0"
+													placement="top"
+												>
+													{tool.name}
+												</Tooltip>
+
+												{#if toolIdx !== selectedToolIds.length - 1}
+													<span>, </span>
+												{/if}
+											{/each}
+										</div>
 									</div>
 								</div>
-								<div>
-									<button
-										class="flex items-center dark:text-gray-500"
-										on:click={() => {
-											atSelectedModel = undefined;
-										}}
-									>
-										<XMark />
-									</button>
+							{/if}
+
+							{#if deepThinkingEnabled}
+								<div class="flex items-center justify-between w-full">
+									<div class="flex items-center gap-2.5 text-sm dark:text-gray-500">
+										<div class="pl-1">
+											<span class="relative flex size-2">
+												<span
+													class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"
+												/>
+												<span class="relative inline-flex rounded-full size-2 bg-yellow-500" />
+											</span>
+										</div>
+										<div class=" translate-y-[0.5px]">深度思考</div>
+									</div>
 								</div>
-							</div>
+							{/if}
+
+							{#if webSearchEnabled || ($settings?.webSearch ?? false) === 'always'}
+								<div class="flex items-center justify-between w-full">
+									<div class="flex items-center gap-2.5 text-sm dark:text-gray-500">
+										<div class="pl-1">
+											<span class="relative flex size-2">
+												<span
+													class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"
+												/>
+												<span class="relative inline-flex rounded-full size-2 bg-blue-500" />
+											</span>
+										</div>
+										<div class=" translate-y-[0.5px]">{$i18n.t('Search the internet')}</div>
+									</div>
+								</div>
+							{/if}
+
+							{#if imageGenerationEnabled}
+								<div class="flex items-center justify-between w-full">
+									<div class="flex items-center gap-2.5 text-sm dark:text-gray-500">
+										<div class="pl-1">
+											<span class="relative flex size-2">
+												<span
+													class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"
+												/>
+												<span class="relative inline-flex rounded-full size-2 bg-teal-500" />
+											</span>
+										</div>
+										<div class=" translate-y-[0.5px]">{$i18n.t('Generate an image')}</div>
+									</div>
+								</div>
+							{/if}
+
+							{#if codeInterpreterEnabled}
+								<div class="flex items-center justify-between w-full">
+									<div class="flex items-center gap-2.5 text-sm dark:text-gray-500">
+										<div class="pl-1">
+											<span class="relative flex size-2">
+												<span
+													class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+												/>
+												<span class="relative inline-flex rounded-full size-2 bg-green-500" />
+											</span>
+										</div>
+										<div class=" translate-y-[0.5px]">{$i18n.t('Execute code for analysis')}</div>
+									</div>
+								</div>
+							{/if}
+
+							{#if atSelectedModel !== undefined}
+								<div class="flex items-center justify-between w-full">
+									<div class="pl-[1px] flex items-center gap-2 text-sm dark:text-gray-500">
+										<img
+											crossorigin="anonymous"
+											alt="model profile"
+											class="size-3.5 max-w-[28px] object-cover rounded-full"
+											src={$models.find((model) => model.id === atSelectedModel.id)?.info?.meta
+												?.profile_image_url ??
+												($i18n.language === 'dg-DG'
+													? `/doge.png`
+													: `${WEBUI_BASE_URL}/static/favicon.png`)}
+										/>
+										<div class="translate-y-[0.5px]">
+											Talking to <span class=" font-medium">{atSelectedModel.name}</span>
+										</div>
+									</div>
+									<div>
+										<button
+											class="flex items-center dark:text-gray-500"
+											on:click={() => {
+												atSelectedModel = undefined;
+											}}
+										>
+											<XMark />
+										</button>
+									</div>
+								</div>
+							{/if}
+
+							<!-- <div>
+								<button
+									class="flex items-center dark:text-gray-500"
+									on:click={() => {
+										atSelectedModel = undefined;
+									}}
+								>
+									<XMark />
+								</button>
+							</div> -->
 						</div>
 					{/if}
 
@@ -1337,6 +1449,45 @@
 														</button>
 													</Tooltip>
 												{/each}
+
+												<Tooltip content="深度思考" placement="top">
+													<button
+														on:click|preventDefault={() =>
+															(deepThinkingEnabled = !deepThinkingEnabled)}
+														type="button"
+														style="margin-right:8px;"
+														class="px-1.5 @sm:px-2.5 py-1.5 flex gap-1.5 items-center text-sm rounded-full font-medium transition-colors duration-300 focus:outline-hidden max-w-full overflow-hidden {deepThinkingEnabled
+															? 'bg-blue-100 dark:bg-blue-500/20 text-blue-500 dark:text-blue-400'
+															: 'bg-transparent text-gray-600 dark:text-gray-300 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'}"
+													>
+														<DeepThinkingIcon className="size-5" strokeWidth="1.75" />
+
+														<span
+															class="hidden @sm:block whitespace-nowrap overflow-hidden text-ellipsis translate-y-[0.5px] mr-0.5"
+															>深度思考</span
+														>
+													</button>
+												</Tooltip>
+
+												<!-- todo -->
+												<!-- {#if $config?.features?.enable_web_search && ($_user.role === 'admin' || $_user?.permissions?.features?.web_search)}
+													<Tooltip content={$i18n.t('Search the internet')} placement="top">
+														<button
+															on:click|preventDefault={() => (webSearchEnabled = !webSearchEnabled)}
+															type="button"
+															class="px-1.5 @sm:px-2.5 py-1.5 flex gap-1.5 items-center text-sm rounded-full font-medium transition-colors duration-300 focus:outline-hidden max-w-full overflow-hidden {webSearchEnabled ||
+															($settings?.webSearch ?? false) === 'always'
+																? 'bg-blue-100 dark:bg-blue-500/20 text-blue-500 dark:text-blue-400'
+																: 'bg-transparent text-gray-600 dark:text-gray-300 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'}"
+														>
+															<GlobeAlt className="size-5" strokeWidth="1.75" />
+															<span
+																class="hidden @sm:block whitespace-nowrap overflow-hidden text-ellipsis translate-y-[0.5px] mr-0.5"
+																>{$i18n.t('Web Search')}</span
+															>
+														</button>
+													</Tooltip>
+												{/if} -->
 
 												{#if showWebSearchButton}
 													<Tooltip content={$i18n.t('Search the internet')} placement="top">

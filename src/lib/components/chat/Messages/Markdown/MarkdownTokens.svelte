@@ -182,7 +182,7 @@
 		{#if alert}
 			<AlertRenderer {token} {alert} />
 		{:else}
-			<blockquote dir="auto">
+			<blockquote dir="auto" style="color: #888;">
 				<svelte:self id={`${id}-${tokenIdx}`} tokens={token.tokens} {onTaskClick} {onSourceClick} />
 			</blockquote>
 		{/if}
@@ -253,14 +253,19 @@
 			</ul>
 		{/if}
 	{:else if token.type === 'details'}
+		<!-- todo 默认展开思考内容的blockquote -->
 		<Collapsible
 			title={token.summary}
-			open={$settings?.expandDetails ?? false}
+			open={$settings?.expandDetails ?? true}
 			attributes={token?.attributes}
 			className="w-full space-y-1"
 			dir="auto"
 		>
-			<div class=" mb-1.5" slot="content">
+			<div
+				class=" mb-1.5"
+				slot="content"
+				style="background:#f9f9f9; border-radius: 10px; margin-top:10px; margin-bottom:10px; padding:10px 20px;"
+			>
 				<svelte:self
 					id={`${id}-${tokenIdx}-d`}
 					tokens={marked.lexer(token.text)}
